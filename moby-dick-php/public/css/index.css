@@ -18,6 +18,11 @@ p {
   align-items: start;
 }
 
+.word {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .bar {
   padding: 5px;
   background-color: orange;

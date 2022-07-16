@@ -1,3 +1,9 @@
+<?php 
+  require_once('../private/initialize.php');
+  $iterator = 0;
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,8 +17,14 @@
     <div class="container">
       <h1>Top 100 words in Moby Dick</h1>
       <div id="words">
-        <p>1. whales</p>
-        <div class="bar" style="width: 100%"><p>966</p></div>
+        <?php foreach($words as $word => $count) { ?>
+          <?php if($iterator > 99) break; ?>
+          <div class="word">
+            <p><?= $iterator+1 . '. ' . $word ?></p>
+            <div class="bar" style="width: <?= round((($count/$topWordCount) * 100),1) ?>%"><p><?= $count ?></p></div>
+          </div>
+          <?php $iterator++ ?>
+        <?php } ?>
       </div>
     </div>
   </body>
