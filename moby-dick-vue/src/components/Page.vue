@@ -1,5 +1,13 @@
 <template>
-  <h1 @click="render" class="font-bold cursor-pointer">Load</h1>
+  <div class="container">
+    <h1 @click="render" class="font-bold cursor-pointer">Load</h1>
+    <div class="words p-10px">
+      <div v-for="(w, index) in sample" :key="index" class="word flex flex-col justify-start items-start mb-10px">
+        <p>{{index + 1}}. {{w.word}}</p>
+        <div class="bar py-5px text-center bg-orange-400 text-white" :style="`width: ${((w.count/topWordCount) * 100).toFixed(1)}%;`">{{w.count}}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -9,7 +17,17 @@ export default {
   data() {
     return {
       words: [],
-      counted: []
+      counted: [],
+      sample: [
+        {
+          word: 'whales',
+          count: 966
+        },
+        {
+          word: 'achab',
+          count: 754
+        }
+      ]
     }
   },
   computed: {
@@ -21,7 +39,7 @@ export default {
       return this.copy.slice(0,99)
     },
     topWordCount() {
-      return this.sortedList[0].count
+      return this.sample[0].count
     }
   },
   methods: {
