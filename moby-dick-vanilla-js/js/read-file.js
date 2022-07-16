@@ -42,13 +42,13 @@ async function readFile() {
       return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
     })
 
-    if (counted.length > 100) {
-      console.log(counted.slice(0,99))
-      return counted.slice(0,99)
-    } else {
-      console.log(counted)
-      return counted
-    }
+    // if (counted.length > 100) {
+    //   console.log(counted.slice(0,100))
+    //   return counted.slice(0,100)
+    // } else {
+    //   console.log(counted)
+    //   return counted
+    // }
   } catch (err) {
     console.error(err);
   }
