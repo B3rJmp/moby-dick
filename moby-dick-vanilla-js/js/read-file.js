@@ -1,10 +1,10 @@
 const {promises: fsPromises} = require('fs');
 
-function createBar(word) {
-  const target = document.getElementById('words')
-  const width = (word.count/topWordCount).toFixed(1)
-  console.log(27,width)
-}
+// function createBar(word) {
+//   const target = document.getElementById('words')
+//   const width = (word.count/topWordCount).toFixed(1)
+//   console.log(27,width)
+// }
 
 async function readFile() {
   try {
@@ -39,19 +39,14 @@ async function readFile() {
       return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
     })
 
-    // if (counted.length > 100) {
-    //   console.log(counted.slice(0,100))
-    //   return counted.slice(0,100)
-    // } else {
-    //   console.log(counted)
-    //   return counted
-    // }
+    return counted.slice(0,100)
+
   } catch (err) {
     console.error(err);
   }
 
 }
 
-export const words = readFile()
-  .then(res => res)
+readFile()
+  .then(res => console.log(res))
   .catch(err => err)
