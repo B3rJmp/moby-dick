@@ -1,9 +1,9 @@
 const {promises: fsPromises} = require('fs');
 
-async function asyncReadFile(filename) {
+async function readFile() {
   try {
-    const contents = await fsPromises.readFile(filename, 'utf-8');
-    const stopWordFile = await fsPromises.readFile('stop-words.txt', 'utf-8');
+    const contents = await fsPromises.readFile('../text-files/moby-dick.txt', 'utf-8');
+    const stopWordFile = await fsPromises.readFile('../text-files/stop-words.txt', 'utf-8');
 
     const lines = contents.split(/\r?\n/);
     const stopWords = stopWordFile.split(/\r?\n/);
@@ -47,4 +47,4 @@ async function asyncReadFile(filename) {
 
 }
 
-asyncReadFile('./moby-dick.txt');
+readFile();
