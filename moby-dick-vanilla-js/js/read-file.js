@@ -17,25 +17,22 @@ async function readFile() {
     var words = []
     var counted = []
 
-    for(line of lines) {
+    lines.forEach(line => {
       let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
       wordsInLine.forEach(w => {
         if(w && w !== '' && !stopWords.includes(w)) {
-          words.push(w)
+          let index = counted.findIndex(c => c.word === w)
+          if(index != -1) {
+            counted[index].count++
+          }else{
+            let newWord = {
+              word: w,
+              count: 1
+            }
+            counted.push(newWord)
+          }
         }
       })
-    }
-
-    words.forEach(w => {
-      if(counted.find(c => c.word === w)) {
-        counted[counted.findIndex(c => c.word === w)].count++
-      }else{
-        let newWord = {
-          word: w,
-          count: 1
-        }
-        counted.push(newWord)
-      }
     })
 
     counted.sort((a,b) => {
