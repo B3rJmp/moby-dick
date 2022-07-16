@@ -2,17 +2,17 @@
   <div class="container">
     <button @click="render" class="py-10px px-20px text-white bg-blue-500 rounded-4px">Load</button>
     <div class="words p-10px">
-      <template v-if="!loading && loaded">
+      <template v-if="!loading && sortedList.length > 0">
         <div v-for="(w, index) in sortedList" :key="index" class="word flex flex-col justify-start items-start mb-10px">
           <p>{{index + 1}}. {{w.word}}</p>
           <div class="bar py-5px text-center bg-orange-400 text-white" :style="`width: ${((w.count/topWordCount) * 100).toFixed(1)}%;`">{{w.count}}</div>
         </div>
       </template>
-      <template v-else-if="loading && !loaded">
+      <template v-else-if="loading">
         <p>Loading, please wait...</p>
       </template>
-      <template v-else-if="!loading && !loaded">
-        <p>click load to begin</p>
+      <template v-else-if="!loading && sortedList.length <= 0">
+        <p>Click load to begin</p>
       </template>
     </div>
   </div>
@@ -27,13 +27,11 @@ export default {
       words: [],
       counted: [],
       loading: false,
-      loaded: false,
     }
   },
   computed: {
     sortedList() {
       let copy = [...this.counted]
-      console.log(36,copy.length)
       if(copy.length > 0) {
         copy.sort((a,b) => {
           return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
@@ -55,95 +53,34 @@ export default {
   methods: {
     render() {
       this.loading = true
-      this.loaded = false
-      var lines = mobyDick.split(/\r?\n/)
-      var stopWords = stopWordFile.split(/\r?\n/)
 
-      // //** ~ 2m 16s  runtime */
-      for(let line of lines) {
-        let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-        for(let w of wordsInLine) {
-          if(w && w !== '' && !stopWords.includes(w)) {
-            let index = this.counted.findIndex(c => c.word === w)
-            if(index != -1) {
-              this.counted[index].count++
-              console.log('updated count')
-            }else{
-              let newWord = {
-                word: w,
-                count: 1
+      this.countWords().then(() => {
+        this.loading = false
+      })
+    },
+    countWords() {
+      return new Promise((resolve, reject) => {
+        var lines = mobyDick.split(/\r?\n/)
+        var stopWords = stopWordFile.split(/\r?\n/)
+        for(let i = 0; i < lines.length; i++) {
+          let wordsInLine = lines[i].split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
+          for(let ii = 0; ii < wordsInLine.length; ii++) {
+            if(wordsInLine[ii] && wordsInLine[ii] !== '' && !stopWords.includes(wordsInLine[ii])) {
+              let index = this.counted.findIndex(c => c.word === wordsInLine[ii])
+              if(index != -1) {
+                this.counted[index].count++
+              }else{
+                let newWord = {
+                  word: wordsInLine[ii],
+                  count: 1
+                }
+                this.counted.push(newWord)
               }
-              this.counted.push(newWord)
-              console.log('new word')
             }
           }
         }
-      }
-
-      // //** ~ 2m 13s runtime */
-      // for(let i = 0; i < lines.length; i++) {
-      //   let wordsInLine = lines[i].split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-      //   for(let ii = 0; ii < wordsInLine.length; ii++) {
-      //     if(wordsInLine[ii] && wordsInLine[ii] !== '' && !stopWords.includes(wordsInLine[ii])) {
-      //       let index = this.counted.findIndex(c => c.word === wordsInLine[ii])
-      //       if(index != -1) {
-      //         this.counted[index].count++
-      //         console.log('updated count')
-      //       }else{
-      //         let newWord = {
-      //           word: wordsInLine[ii],
-      //           count: 1
-      //         }
-      //         this.counted.push(newWord)
-      //         console.log('new word')
-      //       }
-      //     }
-      //   }
-      // }
-
-      //** ~ 5m+ runtime (hard no) */
-      // for(let i = 0; i < lines.length; i++) {
-      //   let wordsInLine = lines[i].split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-      //   wordsInLine.forEach(w => this.words.push(w))
-      // }
-      // for(let i = 0; i < this.words.length; i++) {
-      //   if(this.words[i] && this.words[i] !== '' && !stopWords.includes(this.words[i])) {
-      //     let index = this.counted.findIndex(c => c.word === this.words[i])
-      //     if(index != -1) {
-      //       this.counted[index].count++
-      //       console.log('updated count')
-      //     }else{
-      //       let newWord = {
-      //         word: this.words[i],
-      //         count: 1
-      //       }
-      //       this.counted.push(newWord)
-      //       console.log('new word')
-      //     }
-      //   }
-      // }
-      
-      // lines.forEach(line => {
-      // let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-      //   wordsInLine.forEach(w => {
-      //     if(w && w !== '' && !stopWords.includes(w)) {
-      //       let index = this.counted.findIndex(c => c.word === w)
-      //       if(index != -1) {
-      //         this.counted[index].count++
-      //         console.log('updated count')
-      //       }else{
-      //         let newWord = {
-      //           word: w,
-      //           count: 1
-      //         }
-      //         this.counted.push(newWord)
-      //         console.log('new word')
-      //       }
-      //     }
-      //   })
-      // })
-      this.loading = false
-      this.loaded = true
+        resolve()
+      })
     }
   }
 }
