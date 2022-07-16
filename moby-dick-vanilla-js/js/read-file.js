@@ -1,9 +1,15 @@
 const {promises: fsPromises} = require('fs');
 
+function createBar(word) {
+  const target = document.getElementById('words')
+  const width = (word.count/topWordCount).toFixed(1)
+  console.log(27,width)
+}
+
 async function readFile() {
   try {
-    const contents = await fsPromises.readFile('../text-files/moby-dick.txt', 'utf-8');
-    const stopWordFile = await fsPromises.readFile('../text-files/stop-words.txt', 'utf-8');
+    const contents = await fsPromises.readFile('text-files/moby-dick.txt', 'utf-8');
+    const stopWordFile = await fsPromises.readFile('text-files/stop-words.txt', 'utf-8');
 
     const lines = contents.split(/\r?\n/);
     const stopWords = stopWordFile.split(/\r?\n/);
@@ -37,14 +43,18 @@ async function readFile() {
     })
 
     if (counted.length > 100) {
-      return console.log(counted.slice(0,99))
+      console.log(counted.slice(0,99))
+      return counted.slice(0,99)
     } else {
-      return console.log(counted)
+      console.log(counted)
+      return counted
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 
 }
 
-readFile();
+export const words = readFile()
+  .then(res => res)
+  .catch(err => err)
