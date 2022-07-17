@@ -16,6 +16,13 @@ class ReadPage extends Controller
      */
     public function __invoke(Request $request)
     {
+        $data = $this->count();
+        $topWordCount = reset($data);
+        return view('main',['data' => $data, 'topWordCount' => $topWordCount]);
+    }
+
+    public function count()
+    {
         $mbf = File::get(resource_path('text-files\moby-dick.txt'));
         $swf = File::get(resource_path('text-files\stop-words.txt'));
 
@@ -39,11 +46,10 @@ class ReadPage extends Controller
                 }
             }
         }
+
         arsort($counted);
         $data = array_splice($counted, 0, 100);
 
-        $topWordCount = reset($data);
-        // dd($data);
-        return view('main',['data' => $data, 'topWordCount' => $topWordCount]);
+        return $data;
     }
 }
