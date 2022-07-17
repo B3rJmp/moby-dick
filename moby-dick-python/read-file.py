@@ -1,5 +1,5 @@
 import os, re
-def main():
+def count():
   stopwords = []
   with open('./moby-dick-python/text-files/stop-words.txt') as swf:
     stop_word_file = swf.readlines()
@@ -31,7 +31,28 @@ def main():
     sortedWords[i[0]] = i[1]
     iterator += 1
   
-  print(sortedWords)
+  return sortedWords
+
+def main():
+  words = count()
+  topCount = list(words.values())[0]
+  for key, val in words.items():
+    # word = 'whales'
+    # count = 451
+    perc = round((val/topCount)*50)
+    meter = '|'
+    i = 0
+    while i <= 50:
+      if i < perc:
+        meter += '-'
+      elif i == perc:
+        meter += '>'
+      else:
+        meter += ' '
+      i += 1
+    meter += '| ' + str(val)
+    print(key)
+    print(meter)
 
 if __name__ == '__main__':
   main()
