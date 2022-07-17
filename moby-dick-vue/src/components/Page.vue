@@ -25,26 +25,23 @@ export default {
   data() {
     return {
       words: [],
-      counted: [],
+      counted: {},
       loading: false,
     }
   },
   computed: {
     sortedList() {
-      let copy = [...this.counted]
-      if(copy.length > 0) {
-        copy.sort((a,b) => {
-          return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
-        })
+      var sorted = []
 
-        if(copy.length > 100) {
-          return copy.slice(0,100)
-        }else{
-          return copy
-        }
-      }else{
-        return copy
+      for(let c in this.counted) {
+        sorted.push({word: c, count: this.counted[c]})
       }
+
+      sorted.sort((a,b) => {
+        return b.count - a.count
+      })
+
+      return sorted.slice(0,100)
     },
     topWordCount() {
       return this.sortedList.length > 0 ? this.sortedList[0].count : 0
@@ -62,19 +59,14 @@ export default {
       return new Promise((resolve, reject) => {
         var lines = mobyDick.split(/\r?\n/)
         var stopWords = stopWordFile.split(/\r?\n/)
-        for(let i = 0; i < lines.length; i++) {
-          let wordsInLine = lines[i].split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-          for(let ii = 0; ii < wordsInLine.length; ii++) {
-            if(wordsInLine[ii] && wordsInLine[ii] !== '' && !stopWords.includes(wordsInLine[ii])) {
-              let index = this.counted.findIndex(c => c.word === wordsInLine[ii])
-              if(index != -1) {
-                this.counted[index].count++
+        for(let line of lines) {
+          let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
+          for(let w of wordsInLine) {
+            if(w && w !== '' && !stopWords.includes(w)) {
+              if(this.counted[w]) {
+                this.counted[w]++
               }else{
-                let newWord = {
-                  word: wordsInLine[ii],
-                  count: 1
-                }
-                this.counted.push(newWord)
+                this.counted[w] = 1
               }
             }
           }
