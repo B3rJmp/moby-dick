@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <button @click="render" class="py-10px px-20px text-white bg-blue-500 rounded-4px">Load</button>
+    <h1 class="text-2rem font-bold">Top 100 words in Moby Dick</h1>
     <div class="words p-10px">
       <template v-if="!loading && sortedList.length > 0">
         <div v-for="(w, index) in sortedList" :key="index" class="word flex flex-col justify-start items-start mb-10px">
@@ -24,7 +24,6 @@ import stopWordFile from '!raw-loader!../assets/stop-words.txt'
 export default {
   data() {
     return {
-      words: [],
       counted: {},
       loading: false,
     }
@@ -50,6 +49,7 @@ export default {
   methods: {
     render() {
       this.loading = true
+      this.counted = {}
 
       this.countWords().then(() => {
         this.loading = false
@@ -74,6 +74,9 @@ export default {
         resolve()
       })
     }
+  },
+  mounted() {
+    this.render()
   }
 }
 </script>
