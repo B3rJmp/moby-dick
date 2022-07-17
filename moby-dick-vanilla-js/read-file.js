@@ -9,31 +9,48 @@ async function readFile() {
     const stopWords = stopWordFile.split(/\r?\n/);
 
     var words = []
-    var counted = []
+    // var counted = []
+    var counted = {}
 
     for(let line of lines) {
       let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
       for(let w of wordsInLine) {
         if(w && w !== '' && !stopWords.includes(w)) {
-          let index = counted.findIndex(c => c.word === w)
-          if(index != -1) {
-            counted[index].count++
+          // let index = counted.findIndex(c => c.word === w)
+          
+          // if(index != -1) {
+          if(counted[w]) {
+            // counted[index].count++
+            counted[w]++
           }else{
-            let newWord = {
-              word: w,
-              count: 1
-            }
-            counted.push(newWord)
+            // let newWord = {
+            //   word: w,
+            //   count: 1
+            // }
+            // counted.push(newWord)
+            counted[w] = 1
           }
         }
       }
     }
 
-    counted.sort((a,b) => {
-      return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
+    var sorted = []
+
+    for(let c in counted) {
+      sorted.push({word: c, count: counted[c]})
+    }
+
+    sorted.sort((a,b) => {
+      return b.count - a.count
     })
 
-    return counted.slice(0,100)
+    return sorted.slice(0,100)
+
+    // counted.sort((a,b) => {
+    //   return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
+    // })
+
+    // return counted
 
   } catch (err) {
     console.error(err);
