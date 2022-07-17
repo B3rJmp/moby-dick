@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
+  <div class="w-full">
     <h1 class="text-2rem font-bold">Top 100 words in Moby Dick</h1>
-    <div class="words p-10px">
-      <template v-if="!loading && sortedList.length > 0">
+    <div class="words p-10px w-full">
+      <template v-if="loading">
+        <p>Loading, please wait...</p>
+      </template>
+      <template v-else-if="!loading && sortedList.length > 0">
         <div v-for="(w, index) in sortedList" :key="index" class="word flex flex-col justify-start items-start mb-10px">
           <p>{{index + 1}}. {{w.word}}</p>
           <div class="bar py-5px text-center bg-orange-400 text-white" :style="`width: ${((w.count/topWordCount) * 100).toFixed(1)}%;`">{{w.count}}</div>
         </div>
       </template>
-      <template v-else-if="loading">
-        <p>Loading, please wait...</p>
-      </template>
-      <template v-else-if="!loading && sortedList.length <= 0">
-        <p>Click load to begin</p>
+      <template v-else-if="error || sortedList.length <= 0">
+        <h2 class="text-red-500">Something went wrong, please test your configuration, and try again</h2>
       </template>
     </div>
   </div>
@@ -24,6 +24,8 @@ export default {
     return {
       counted: {},
       loading: false,
+      error: false,
+      apiUrl: 'http://localhost:8000/api/get-words'
     }
   },
   computed: {
@@ -40,41 +42,27 @@ export default {
 
       return sorted.slice(0,100)
     },
-    // topWordCount() {
-    //   return this.sortedList.length > 0 ? this.sortedList[0].count : 0
-    // }
+    topWordCount() {
+      return this.sortedList.length > 0 ? this.sortedList[0].count : 0
+    }
   },
   methods: {
-    // render() {
-    //   this.loading = true
-    //   this.counted = {}
-
-    //   this.countWords().then(() => {
-    //     this.loading = false
-    //   })
-    // },
-    // countWords() {
-    //   return new Promise((resolve, reject) => {
-    //     var lines = mobyDick.split(/\r?\n/)
-    //     var stopWords = stopWordFile.split(/\r?\n/)
-    //     for(let line of lines) {
-    //       let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
-    //       for(let w of wordsInLine) {
-    //         if(w && w !== '' && !stopWords.includes(w)) {
-    //           if(this.counted[w]) {
-    //             this.counted[w]++
-    //           }else{
-    //             this.counted[w] = 1
-    //           }
-    //         }
-    //       }
-    //     }
-    //     resolve()
-    //   })
-    // }
+    getData() {
+      this.loading = true
+      this.error = false
+      this.axios.get(this.apiUrl).then(res => {
+        this.counted = res.data
+        this.loading = false
+      })
+      .catch(err => {
+        console.error(err)
+        this.loading = false
+        this.error = true
+      })
+    }
   },
   mounted() {
-    // this.render()
+    this.getData()
   }
 }
 </script>
