@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  #words {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+
+  .word {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .bar {
+    padding: 5px;
+    background-color: orange;
+    color: white;
+    text-align: right;
+    box-sizing: border-box;
+  }
