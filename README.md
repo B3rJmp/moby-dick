@@ -69,4 +69,4 @@ npm install
 npm run serve
 ```
 
-As long as the Laravel app is on localhost:8000 the api should run fine.
+As long as the Laravel app is on `localhost:8000` the api should run fine.
