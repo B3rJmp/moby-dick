@@ -8,26 +8,15 @@ async function readFile() {
     const lines = contents.split(/\r?\n/);
     const stopWords = stopWordFile.split(/\r?\n/);
 
-    var words = []
-    // var counted = []
     var counted = {}
 
     for(let line of lines) {
       let wordsInLine = line.split(' ').map(l => l.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase())
       for(let w of wordsInLine) {
         if(w && w !== '' && !stopWords.includes(w)) {
-          // let index = counted.findIndex(c => c.word === w)
-          
-          // if(index != -1) {
           if(counted[w]) {
-            // counted[index].count++
             counted[w]++
           }else{
-            // let newWord = {
-            //   word: w,
-            //   count: 1
-            // }
-            // counted.push(newWord)
             counted[w] = 1
           }
         }
@@ -45,12 +34,6 @@ async function readFile() {
     })
 
     return sorted.slice(0,100)
-
-    // counted.sort((a,b) => {
-    //   return a.count > b.count ? -1 : a.count < b.count ? 1 : 0
-    // })
-
-    // return counted
 
   } catch (err) {
     console.error(err);
