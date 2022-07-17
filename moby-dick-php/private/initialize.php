@@ -4,7 +4,7 @@
 $words = array();
 $stop_words = [];
 
-$stop_words_file = fopen('./text-files/stop-words.txt','r');
+$stop_words_file = fopen('../private/text-files/stop-words.txt','r');
 
 while($line = fgets($stop_words_file)) {
   array_push($stop_words, rtrim(trim($line)));
@@ -12,7 +12,7 @@ while($line = fgets($stop_words_file)) {
 
 fclose($stop_words_file);
 
-$moby_dick = fopen('./text-files/moby-dick.txt','r');
+$moby_dick = fopen('../private/text-files/moby-dick.txt','r');
 
 while ($line = fgets($moby_dick)) {
   $newArray = explode(' ', $line);
