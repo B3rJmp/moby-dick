@@ -1,5 +1,7 @@
 # All Moby Dick Projects
 
+I decided to do this project in the main languages I know, so even though I only needed to do one, here's six different ways I did this project. Pick your poison.
+
 ### Vanilla JS
 
 Here's a simple JavaScript file that will run with node.js. All there is to do is to type `node read-file.js` and it will spit out the sorted words. I didn't spend a whole lot of time with UI on this one, I more just wanted to get the functionality down before moving into Vue
