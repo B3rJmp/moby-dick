@@ -1,4 +1,4 @@
-import os, re
+import re
 def count():
   stopwords = []
   with open('./moby-dick-python/text-files/stop-words.txt') as swf:
@@ -20,7 +20,6 @@ def count():
           counted[word] = 1
         else:
           counted[word] = counted[word] + 1
-  # print(counted)
 
   sort_words = sorted(counted.items(), key=lambda x: x[1], reverse=True)
 
@@ -37,8 +36,6 @@ def main():
   words = count()
   topCount = list(words.values())[0]
   for key, val in words.items():
-    # word = 'whales'
-    # count = 451
     perc = round((val/topCount)*50)
     meter = '|'
     i = 0
