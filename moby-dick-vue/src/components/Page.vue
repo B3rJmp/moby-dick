@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="w-full">
     <h1 class="text-2rem font-bold">Top 100 words in Moby Dick</h1>
     <div class="words p-10px">
       <template v-if="!loading && sortedList.length > 0">
